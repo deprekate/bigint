@@ -11,7 +11,7 @@ Since bigint is a header file only, there is no library code to link against.
 
 Example 1. Adding two numbers.
 ```sh
-#include "#include "bigint.h""
+#include "bigint.h""
 
 char *a = "100000000000000000000000000000000000000000000000000000000000000000000";
 char *b = "-5";
@@ -23,7 +23,7 @@ bigint *z = bi_add(x, y);
 
 Example 2. Subtracting two numbers.
 ```sh
-#include "#include "bigint.h""
+#include "bigint.h""
 
 char *a = "100000000000000000000000000000000000000000000000000000000000000000000";
 char *b = "-5";
@@ -35,7 +35,7 @@ bigint *z = bi_sub(x, y);
 
 Example 3. Comparing two numbers.
 ```sh
-#include "#include "bigint.h""
+#include "bigint.h""
 
 char *a = "100000000000000000000000000000000000000000000000000000000000000000000";
 char *b = "-5";

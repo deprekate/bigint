@@ -24,7 +24,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
 static int mod(int a, int b){
         int c = a % b;
         return c < 0 ? c + b : c;
@@ -48,27 +47,64 @@ static bigint* bi_new(size_t size){
 
 bigint* bi_inf(void){
 	size_t max_size = (size_t)-1;
-	bigint *a = bi_new(max_size);
-	return a;
+	bigint *b = bi_new(max_size);
+	return b;
 }
 
 
 static bigint* bi_from_string(const char *s){
+	bigint *b;
 	bool positive = true;
+
 	if(s[0] == '-'){
 		positive = false;
 	}
 	s += strspn(s, "-");
 	s += strspn(s, "0");
-	size_t size = strlen(s);
-	int min = (size == 0) ? 1 : 0;
+	if(strstr(s, "E+") != NULL){
+		char *tok, *str, *m, *ptr;
+		int i, num, offset, n, min;
+		size_t size;
 
-	bigint *b = bi_new(size + min);
-	b->positive = positive;
-	int i;
-	for(i = 0; i < size; i++){
-		b->data[size - i - 1] = s[i] - '0';
+		str = malloc(strlen(s) + 1);
+		strcpy(str, s);
+		tok = strtok(str, "E+");
+		m = malloc(strlen(tok) + 1);
+
+		offset = 0;
+		for(i = 0; tok[i] != '\0'; i++){
+			if(tok[i] != '.'){
+				m[i-offset] = tok[i];
+			}else{
+				offset = 1;
+				num = i;
+			}
+		}
+		tok = strtok(NULL, "E+");
+		n = strtol(tok, &ptr, 10);
+		size = num+n;
+		min = strlen(m) < num+n ? strlen(m) : num+n;
+		printf("%i %i\n", num, n);
+		b = bi_new(num+n);
+
+		for(i = 0; i < min; i++){
+			b->data[size - i - 1] = m[i] - '0';
+		}
+		free(str);
+		free(m);
+	}else if(strstr(s, "E-") != NULL || strstr(s, ".") != NULL){
+		b = bi_new(1);
+	}else{
+		size_t size = strlen(s);
+		int min = (size == 0) ? 1 : 0;
+
+		b = bi_new(size + min);
+		int i;
+		for(i = 0; i < size; i++){
+			b->data[size - i - 1] = s[i] - '0';
+		}
 	}
+	b->positive = positive;
 	return b;
 }
 char *bi_to_string(bigint *a){
