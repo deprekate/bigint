@@ -4,7 +4,7 @@ An implementation of a fixed point integer datatype for the C programming langua
 
 BigInt is just a single header file: bigint.h. All you need to do is copy the header file into your project, and:
 ```sh
-#include "uthash.h"
+#include "bigint.h"
 ```
 Since bigint is a header file only, there is no library code to link against.
 
